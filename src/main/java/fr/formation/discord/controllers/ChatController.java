@@ -1,6 +1,9 @@
-package fr.formation.discord.controller;
+package fr.formation.discord.controllers;
 
 import fr.formation.discord.Message;
+import fr.formation.discord.models.UserLoaded;
+import fr.formation.discord.request.MessageSendRequest;
+import fr.formation.discord.request.UserSignUpAndConnect;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,18 +17,19 @@ import java.util.List;
 public class ChatController {
     private List<Message> myMessages = new ArrayList<>();
 
-    @RequestMapping("/home")
+    @RequestMapping("/chathome")
     public String home(Model model) {
         model.addAttribute("myMessages", myMessages);
-        return "page_home";
+        return "page_chat";
     }
 
     @PostMapping("/sendMessage")
-    public String sendMessage(@RequestParam String content) {
+    public String sendMessage(MessageSendRequest request) {
         Message message = new Message();
-        message.setContent(content);
+        message.setUsername(UserLoaded.user.getUsername());
+        message.setContent(request.getContent());
         myMessages.add(message);
-        return "redirect:/home";
+        return "redirect:/chathome";
     }
 }
 

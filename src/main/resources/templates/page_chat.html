@@ -19,7 +19,9 @@
 <main>
     <div id="chat-box">
         <ul>
-            <div th:each="message : ${myMessages}" class="message-box" th:text="${message.content}"></div>
+            <li th:each="message : ${myMessages}" class="message-box">
+                <span th:text="${message.username} + ' : ' + ${message.content}"></span>
+            </li>
         </ul>
     </div>
     <div id="user-input">
@@ -30,8 +32,6 @@
     </div>
 </main>
 <footer>
-
 </footer>
-
 </body>
 </html>
