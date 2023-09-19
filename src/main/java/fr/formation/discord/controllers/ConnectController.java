@@ -1,6 +1,7 @@
 package fr.formation.discord.controllers;
 
 import fr.formation.discord.models.User;
+import fr.formation.discord.models.UserLoaded;
 import fr.formation.discord.models.UserSingleton;
 import fr.formation.discord.request.UserSignUpAndConnect;
 import org.springframework.stereotype.Controller;
@@ -25,12 +26,12 @@ public class ConnectController {
 
         for (User user : UserSingleton.users) {
             if (Objects.equals(user.getPassword(), request.getPassword()) && Objects.equals(user.getUsername(), request.getUsername())) {
-
+                UserLoaded.user = user;
                 flight = true;
             }
         }
         if (flight) {
-            return "home";
+            return "redirect:/chathome";
         } else {
             return "popupFaildedConnect";
         }

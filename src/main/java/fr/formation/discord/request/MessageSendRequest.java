@@ -1,12 +1,11 @@
-package fr.formation.discord;
+package fr.formation.discord.request;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter
-public class Message {
-
+@Getter
+@Setter
+public class MessageSendRequest {
     private String username;
-
     private String content;
 }
