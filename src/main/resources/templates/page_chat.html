@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        #chat-box {
+            width: 300px;
+        }
+        .message-box {
+            background-color: #e0e0e0;
+            padding: 10px;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Canal de Discussion</h1>
+</header>
+<main>
+    <div id="chat-box">
+        <ul>
+            <div th:each="message : ${myMessages}" class="message-box" th:text="${message.content}"></div>
+        </ul>
+    </div>
+    <div id="user-input">
+        <form action="/sendMessage" method="post">
+            <input type="text" id="message" name="content" placeholder="Tapez votre message...">
+            <button type="submit">Envoyer</button>
+        </form>
+    </div>
+</main>
+<footer>
+
+</footer>
+
+</body>
+</html>
