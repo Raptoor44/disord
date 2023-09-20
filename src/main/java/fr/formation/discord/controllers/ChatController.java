@@ -82,6 +82,12 @@ public class ChatController {
         currentIdChannel = channelId;
         return "redirect:/chathome?channelId=" + channelId;
     }
+
+    @SendTo("/topic/chat")
+    public Message send(Message message) throws Exception {
+        Thread.sleep(1000); // simulated delay
+        return message;
+    }
 }
 
 
