@@ -11,22 +11,41 @@
             margin: 5px 0;
         }
     </style>
-
-    <script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
-    <script src="jquery-3.6.4.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 </head>
 <script>
-      var stompClient = StompJs.over(new SockJS("/chat"));
-      stompClient.connect({}, function(frame) {
-          stompClient.subscribe("/topic/chat", function(message) {
-              $("#list-messages")
-              .last()
-              .append("<span th:text='${message.username} + \" : \" + ${message.content}'></span>");
 
-          });
-      });
+    var socket = new WebSocket("ws://localhost:35729/chat"); // Remplacez "votre-serveur" par l'URL de votre serveur WebSocket
+    // Créer une fonction pour gérer les messages reçus
+    function handleMessage(message) {
+        $("#list-messages")
+            .last()
+            .append("<span>" + message.username + " : " + message.content + "</span>");
+    }
+
+
+         // Écoutez les événements de réception de messages
+        socket.addEventListener("/topic/chat", (event) => {
+          const receivedMessage = JSON.parse(event.data);
+            // Traitez le message reçu du topic "/topic/chat"
+            console.log('Message reçu du topic "/topic/chat" :', receivedMessage);
+    });
+
+    socket.onclose = function (event) {
+        // La connexion WebSocket est fermée
+        if (event.wasClean) {
+            // La connexion a été fermée proprement
+        } else {
+            // La connexion a été interrompue de manière inattendue, vous pouvez tenter de la rétablir ici si nécessaire
+        }
+    };
+
+    socket.onerror = function (error) {
+        // Une erreur s'est produite lors de la connexion WebSocket
+        console.error("WebSocket Error: " + error.message);
+    };
 </script>
+
 <body>
 <header>
     <h1>Canal de Discussion</h1>
