@@ -178,7 +178,7 @@
                     <div id="chat-box">
                         <ul>
                             <li th:each="message : ${myMessages}" class="message-box">
-                                <span th:text="${message.username} + ' : ' + ${message.content}"></span>
+                                <span th:text="${message.user.username} + ' : ' + ${message.content}"></span>
                             </li>
                         </ul>
                     </div>

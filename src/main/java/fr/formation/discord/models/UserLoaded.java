@@ -8,4 +8,5 @@ import org.springframework.stereotype.Component;
 @Scope(value = "session")
 public class UserLoaded {
         public static User user;
+        public static long loadChannelId = 0;
 }

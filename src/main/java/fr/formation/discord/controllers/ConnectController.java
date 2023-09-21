@@ -2,8 +2,10 @@ package fr.formation.discord.controllers;
 
 import fr.formation.discord.models.User;
 import fr.formation.discord.models.UserLoaded;
-import fr.formation.discord.models.UserSingleton;
+import fr.formation.discord.repo.UserRepository;
 import fr.formation.discord.request.UserSignUpAndConnect;
+import fr.formation.discord.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +15,10 @@ import java.util.Objects;
 
 @Controller
 public class ConnectController {
+
+    @Autowired
+    private UserRepository uRepo;
+    private UserService uService ;
 
     @GetMapping("/connect")
     public String signup(Model model) {
@@ -24,12 +30,14 @@ public class ConnectController {
 
         boolean flight = false;
 
-        for (User user : UserSingleton.users) {
-            if (Objects.equals(user.getPassword(), request.getPassword()) && Objects.equals(user.getUsername(), request.getUsername())) {
-                UserLoaded.user = user;
-                flight = true;
-            }
+        uService = new UserService(uRepo);
+        User user = uService.findByUsernameAndPassword(request.getUsername(), request.getPassword());
+
+        if (user != null) {
+            UserLoaded.user = user;
+            flight = true;
         }
+
         if (flight) {
             return "redirect:/chathome";
         } else {
