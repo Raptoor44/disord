@@ -1,23 +1,23 @@
 package fr.formation.discord.controllers;
 
 import fr.formation.discord.models.Channel;
-import fr.formation.discord.models.UserLoaded;
+import fr.formation.discord.services.UserLoaded;
 import fr.formation.discord.repo.ChannelRepository;
 import fr.formation.discord.repo.MessageRepository;
 import fr.formation.discord.repo.UserRepository;
 import fr.formation.discord.request.MessageSendRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import fr.formation.discord.models.Message;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
+@EnableMethodSecurity(prePostEnabled = true)
 public class ChatController {
 
     private List<Message> myMessages = new ArrayList<>();
@@ -44,6 +44,13 @@ public class ChatController {
             model.addAttribute("myMessages", myMessages);
         }
         model.addAttribute("channels", cRepo.findAll());
+
+
+        String jwtToken = (String) model.getAttribute("jwtToken"); // Assurez-vous d'appeler JwtUtil.generate() correctement
+
+        model.addAttribute("jwtToken", jwtToken);
+
+
         return "page_chat";
     }
 
