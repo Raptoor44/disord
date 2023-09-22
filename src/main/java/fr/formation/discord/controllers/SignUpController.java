@@ -17,22 +17,20 @@ public class SignUpController {
     public String signup(Model model) {
         return "signup";
     }
-    @Autowired
-    private UserRepository uRepo;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @PostMapping("/signup-post")
+    @Autowired
+    private UserRepository uRepo;
+    @PostMapping("/signup")
     public String postSignUp(UserSignUpAndConnect request, Model model) {
-        User utilisateur = new User();
+        User user = new User();
 
-        BeanUtils.copyProperties(request, utilisateur);
+        BeanUtils.copyProperties(request, user);
 
-        utilisateur.setPassword(this.passwordEncoder.encode(request.getPassword()));
-
-        uRepo.save(utilisateur);
-
+        user.setPassword(this.passwordEncoder.encode(request.getPassword()));
+        uRepo.save(user);
         return "home";
     }
 
