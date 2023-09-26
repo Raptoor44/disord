@@ -2,6 +2,7 @@ package fr.formation.discord.security;
 
 import fr.formation.discord.models.User;
 import fr.formation.discord.repo.UserRepository;
+import fr.formation.discord.services.UserLoaded;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,7 +24,7 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("Utilisateur non trouvé avec le nom d'utilisateur : " + username);
         }
 
-        // Créez et retournez un UserDetails personnalisé à partir des données de l'utilisateur.
+        UserLoaded.user = user;
         return new CustomUserDetails(user);
     }
 }

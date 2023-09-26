@@ -24,9 +24,6 @@ public class SignUpController {
     @Autowired
     private UserRepository uRepo;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     @PostMapping("/signup-post")
     public String postSignUp(UserSignUpAndConnect request, Model model) {
 

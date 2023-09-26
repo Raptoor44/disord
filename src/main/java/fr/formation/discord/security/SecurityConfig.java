@@ -35,12 +35,15 @@ public class SecurityConfig {
 
         http
                 .formLogin(form -> form
-                    .loginPage("/connect")
-                    .loginProcessingUrl("/perform_login")
-                    .defaultSuccessUrl("/chathome", true)
-                    .failureUrl("/login?erreur")
+                        .loginPage("/connect")
+                        .loginProcessingUrl("/perform_login")
+                        .defaultSuccessUrl("/chathome", true)
+                        .failureUrl("/login?erreur")
                 );
+
+        return http.build();
     }
+
 
 
     @Bean
