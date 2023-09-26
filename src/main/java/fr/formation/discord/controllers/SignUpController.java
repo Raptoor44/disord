@@ -23,7 +23,7 @@ public class SignUpController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @PostMapping("/signup")
+    @PostMapping("/signup-post")
     public String postSignUp(UserSignUpAndConnect request, Model model) {
         User utilisateur = new User();
 

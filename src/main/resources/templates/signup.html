@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Bonjour, inscrivez vous !</h1>
-<form method="POST">
+<form method="POST" th:action="@{/signup-post}">
     <input type="text" name="username" aria-label="pseudo" />
     <input type="text" name="password" aria-label="votre mot de passe"/>
     <input type="submit" value="s'inscrire" />
