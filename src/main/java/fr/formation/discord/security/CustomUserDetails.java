@@ -51,5 +51,4 @@ public class CustomUserDetails implements UserDetails {
         return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
     }
 
-    // Implémentez les autres méthodes UserDetails si nécessaire.
 }

@@ -23,14 +23,18 @@ public class SignUpController {
 
     @Autowired
     private UserRepository uRepo;
-    @PostMapping("/signup")
+
+    @PostMapping("/signup-post")
     public String postSignUp(UserSignUpAndConnect request, Model model) {
-        User user = new User();
 
-        BeanUtils.copyProperties(request, user);
+        User utilisateur = new User();
 
-        user.setPassword(this.passwordEncoder.encode(request.getPassword()));
-        uRepo.save(user);
+        BeanUtils.copyProperties(request, utilisateur);
+
+        utilisateur.setPassword(this.passwordEncoder.encode(request.getPassword()));
+
+        uRepo.save(utilisateur);
+
         return "home";
     }
 

@@ -8,7 +8,6 @@ import java.util.List;
 
 @Getter @Setter
 @Entity
-@Table(name = "[user]")
 public class User {
 
     @Id
@@ -21,13 +20,12 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Message> messages;
 
-    // Ajoutez un constructeur vide
     public User() {
     }
 
-    // Ajoutez un constructeur avec username et password
     public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
+
 }
