@@ -5,7 +5,6 @@ import fr.formation.discord.repo.UserRepository;
 import fr.formation.discord.request.UserSignUpAndConnect;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,14 +23,21 @@ public class SignUpController {
 
     @Autowired
     private UserRepository uRepo;
-    @PostMapping("/signup")
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @PostMapping("/signup-post")
     public String postSignUp(UserSignUpAndConnect request, Model model) {
-        User user = new User();
 
-        BeanUtils.copyProperties(request, user);
+        User utilisateur = new User();
 
-        user.setPassword(this.passwordEncoder.encode(request.getPassword()));
-        uRepo.save(user);
+        BeanUtils.copyProperties(request, utilisateur);
+
+        utilisateur.setPassword(this.passwordEncoder.encode(request.getPassword()));
+
+        uRepo.save(utilisateur);
+
         return "home";
     }
 
