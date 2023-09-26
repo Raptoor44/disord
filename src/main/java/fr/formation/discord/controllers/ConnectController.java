@@ -1,5 +1,6 @@
 package fr.formation.discord.controllers;
 
+
 import fr.formation.discord.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,6 +14,7 @@ public class ConnectController {
     @Autowired
     private UserRepository uRepo;
 
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -20,5 +22,6 @@ public class ConnectController {
     public String signup(Model model) {
 
         return "connect";
+
     }
 }

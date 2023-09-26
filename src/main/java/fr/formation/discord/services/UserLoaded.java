@@ -1,4 +1,4 @@
-package fr.formation.discord.models;
+package fr.formation.discord.services;
 
 import fr.formation.discord.models.User;
 import org.springframework.context.annotation.Scope;

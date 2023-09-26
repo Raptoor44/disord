@@ -17,6 +17,10 @@ public class SignUpController {
     public String signup(Model model) {
         return "signup";
     }
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
     private UserRepository uRepo;
 
@@ -25,6 +29,7 @@ public class SignUpController {
 
     @PostMapping("/signup-post")
     public String postSignUp(UserSignUpAndConnect request, Model model) {
+
         User utilisateur = new User();
 
         BeanUtils.copyProperties(request, utilisateur);
