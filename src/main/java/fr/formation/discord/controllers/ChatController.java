@@ -1,6 +1,8 @@
 package fr.formation.discord.controllers;
 
+
 import fr.formation.discord.models.Channel;
+import fr.formation.discord.models.Message;
 import fr.formation.discord.models.UserLoaded;
 import fr.formation.discord.repo.ChannelRepository;
 import fr.formation.discord.repo.MessageRepository;
@@ -10,12 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import fr.formation.discord.models.Message;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class ChatController {
@@ -47,46 +46,21 @@ public class ChatController {
         return "page_chat";
     }
 
-    @PostMapping("/sendMessage")
-    public String sendMessage(@RequestParam(required = false) Long currentChannelId, MessageSendRequest request) {
-        Message message = new Message();
-        message.setContent(request.getContent());
-        message.setUser(UserLoaded.user);
-
-        currentChannelId = currentIdChannel;
-        if (currentChannelId != null) {
-            Channel channel = cRepo.findById(currentChannelId.intValue()).orElseThrow();
-            if (channel != null) {
-                message.setChannel(cRepo.findById(currentChannelId.intValue()).orElseThrow());
-                mRepo.save(message);
-            }
-        } else {
-            message.setChannel(cRepo.findById(currentChannelId.intValue()).orElseThrow());
-            mRepo.save(message);
-        }
-        return "redirect:/chathome" + (currentChannelId != null ? "?channelId=" + currentChannelId : "");
-    }
     @PostMapping("/createChannel")
-    public String createChannel(@RequestParam("channelName") String channelName) {
+    public String createChannel(@RequestParam("channelName") String channelName, Model model) {
         Channel newChannel = new Channel();
-        newChannel.setId(channelIdCounter++);
         newChannel.setName(channelName);
-        newChannel.setMessages(new ArrayList<>());
         cRepo.save(newChannel);
-        currentIdChannel = newChannel.getId();
+        model.addAttribute("channels", cRepo.findAll());
         return "redirect:/chathome?channelId=" + newChannel.getId();
     }
-
-    @PostMapping("/changeChannel")
-    public String changeChannel(@RequestParam("channelId") Long channelId) {
+    @GetMapping("/changeChannel")
+    public String changeChannel(@RequestParam("channelId") Long channelId, Model model) {
         currentIdChannel = channelId;
-        return "redirect:/chathome?channelId=" + channelId;
-    }
-
-    @SendTo("/topic/chat")
-    public Message send(Message message) throws Exception {
-        Thread.sleep(1000); // simulated delay
-        return message;
+        List<Message> messages = mRepo.findByChannelId(channelId);
+        List<Channel> channels = cRepo.findAll();
+        model.addAttribute("myMessages", messages);
+        return "redirect:/chathome?channelId=" + currentIdChannel;
     }
 }
 
