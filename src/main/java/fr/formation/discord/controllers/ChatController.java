@@ -69,6 +69,3 @@ public class ChatController {
         return "redirect:/chathome?channelId=" + currentIdChannel;
     }
 }
-
-
-
