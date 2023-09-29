@@ -6,9 +6,68 @@
     <meta th:content="${token}" name="Authorization"/>
     <title>Chat en ligne</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script>
+$(document).ready(function () {
+    const stompClient = new StompJs.Client({
+        brokerURL: 'ws://localhost:8080/gs-guide-websocket'
+    });
+
+    stompClient.onConnect = (frame) => {
+        setConnected(true);
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/topic/greetings', (greetings) => {
+            $("#chat-box ul").append("<li class='message-box'>" + JSON.parse(greetings.body).content + "</li>");
+        });
+    };
+
+    stompClient.onWebSocketError = (error) => {
+        console.error('Error with websocket', error);
+    };
+
+    stompClient.onStompError = (frame) => {
+        console.error('Broker reported error: ' + frame.headers['message']);
+        console.error('Additional details: ' + frame.body);
+    };
+
+    function setConnected(connected) {
+        $("#connect").prop("disabled", connected);
+        $("#disconnect").prop("disabled", !connected);
+        if (connected) {
+            $("#conversation").show();
+        } else {
+            $("#conversation").hide();
+        }
+        $("#greetings").html("");
+    }
+
+    function connect() {
+        stompClient.activate();
+    }
+
+   $("#message-form").on('submit', function (e) {
+    e.preventDefault();
+    var content = $("#content").val();
+    var channelId = $("#idChannel").val();
+    var headers = {
+        "channelId": channelId
+    };
+
+    stompClient.publish({
+        destination: "/hello",
+        headers: headers,
+        body: JSON.stringify(content)
+    });
+    $("#content").val("");
+});
+    connect();
+    $( "#connect" ).click(() => connect());
+});
+</script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -153,26 +212,23 @@
         <div class="col-md-3">
             <div id="new_canal">
                 <h2>Créer un nouveau groupe</h2>
-                <!-- Bouton pour ouvrir la boîte de dialogue -->
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createChannelModal">
                     Créer un canal
                 </button>
             </div>
             <div id="channel-list">
                 <h2>Liste des canaux de discussion</h2>
-                <ul>
-                    <li th:each="channel : ${channels}">
-                        <form method="post" action="/changeChannel">
-                            <input type="hidden" name="channelId" th:value="${channel.id}" />
-                            <button type="submit" class="btn btn-link" th:text="${channel.name}"></button>
-                        </form>
-                    </li>
-                </ul>
+                <form id="changeChannelForm" method="get" th:action="@{/changeChannel}">
+                    <select id="channelSelect" name="channelId" onchange="this.form.submit()">
+                        <option value="" selected disabled>Choisissez un canal</option>
+                        <option th:each="channel : ${channels}" th:value="${channel.id}" th:text="${channel.name}"></option>
+                    </select>
+                </form>
             </div>
         </div>
-        <div class="col-md-9" th:if="${currentChannelId != null}">
+        <div class="col-md-9">
             <header>
-                    <h1 th:text="'Canal : ' + ${currentChannelName}"></h1>
+                <h1 th:text="'Canal : ' + ${currentChannelName}"></h1>
             </header>
             <main>
                 <div id="chat-box-container">
@@ -186,9 +242,11 @@
                     <div id="user-input">
                         <div id="message-form">
                             <form action="/sendMessage" method="post">
-                                <input type="text" id="message" name="content" placeholder="Tapez votre message...">
+                                <input type="hidden" id="idChannel" name="channelId" th:value="${currentChannelId}" />
+                                <input type="text" id="content" name="content" placeholder="Tapez votre message...">
                                 <button type="submit">Envoyer</button>
                             </form>
+
                         </div>
                     </div>
                 </div>
@@ -206,12 +264,11 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="/createChannel" method="post">
+                <form th:action="@{/createChannel}" method="post">
                     <div class="form-group">
                         <label for="channelName">Nom du canal :</label>
-                        <input type="text" id="channelName" name="channelName" class="form-control" placeholder="Entrez le nom du nouveau canal...">
+                        <input type="text" id="channelName" name="channelName" class="form-control" placeholder="Entrez le nom du nouveau canal..." required>
                     </div>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
                     <button type="submit" class="btn btn-primary">Valider</button>
                 </form>
             </div>

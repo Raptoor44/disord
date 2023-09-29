@@ -1,17 +1,19 @@
 package fr.formation.discord.controllers;
 
+
 import fr.formation.discord.models.Channel;
-import fr.formation.discord.services.UserLoaded;
+import fr.formation.discord.models.Message;
 import fr.formation.discord.repo.ChannelRepository;
 import fr.formation.discord.repo.MessageRepository;
 import fr.formation.discord.repo.UserRepository;
-import fr.formation.discord.request.MessageSendRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import fr.formation.discord.models.Message;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,52 +46,26 @@ public class ChatController {
             model.addAttribute("myMessages", myMessages);
         }
         model.addAttribute("channels", cRepo.findAll());
-
-
-        String jwtToken = (String) model.getAttribute("jwtToken"); // Assurez-vous d'appeler JwtUtil.generate() correctement
-
+        String jwtToken = (String) model.getAttribute("jwtToken");
         model.addAttribute("jwtToken", jwtToken);
-
 
         return "page_chat";
     }
 
-    @PostMapping("/sendMessage")
-    public String sendMessage(@RequestParam(required = false) Long currentChannelId, MessageSendRequest request) {
-        Message message = new Message();
-        message.setContent(request.getContent());
-        message.setUser(UserLoaded.user);
-
-        currentChannelId = currentIdChannel;
-        if (currentChannelId != null) {
-            Channel channel = cRepo.findById(currentChannelId.intValue()).orElseThrow();
-            if (channel != null) {
-                message.setChannel(cRepo.findById(currentChannelId.intValue()).orElseThrow());
-                mRepo.save(message);
-            }
-        } else {
-            message.setChannel(cRepo.findById(currentChannelId.intValue()).orElseThrow());
-            mRepo.save(message);
-        }
-        return "redirect:/chathome" + (currentChannelId != null ? "?channelId=" + currentChannelId : "");
-    }
     @PostMapping("/createChannel")
-    public String createChannel(@RequestParam("channelName") String channelName) {
+    public String createChannel(@RequestParam("channelName") String channelName, Model model) {
         Channel newChannel = new Channel();
-        newChannel.setId(channelIdCounter++);
         newChannel.setName(channelName);
-        newChannel.setMessages(new ArrayList<>());
         cRepo.save(newChannel);
-        currentIdChannel = newChannel.getId();
+        model.addAttribute("channels", cRepo.findAll());
         return "redirect:/chathome?channelId=" + newChannel.getId();
     }
-
-    @PostMapping("/changeChannel")
-    public String changeChannel(@RequestParam("channelId") Long channelId) {
+    @GetMapping("/changeChannel")
+    public String changeChannel(@RequestParam("channelId") Long channelId, Model model) {
         currentIdChannel = channelId;
-        return "redirect:/chathome?channelId=" + channelId;
+        List<Message> messages = mRepo.findByChannelId(channelId);
+        List<Channel> channels = cRepo.findAll();
+        model.addAttribute("myMessages", messages);
+        return "redirect:/chathome?channelId=" + currentIdChannel;
     }
 }
-
-
-

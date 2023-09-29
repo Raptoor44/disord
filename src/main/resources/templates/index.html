@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:color="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Hello WebSocket</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+  <script>
+  const stompClient = new StompJs.Client({
+    brokerURL: 'ws://localhost:8080/gs-guide-websocket'
+});
+
+stompClient.onConnect = (frame) => {
+    setConnected(true);
+    console.log('Connected: ' + frame);
+    stompClient.subscribe('/topic/greetings', (greetings) => {
+        showGreeting(JSON.parse(greetings.body).content);
+    });
+};
+
+stompClient.onWebSocketError = (error) => {
+    console.error('Error with websocket', error);
+};
+
+stompClient.onStompError = (frame) => {
+    console.error('Broker reported error: ' + frame.headers['message']);
+    console.error('Additional details: ' + frame.body);
+};
+
+function setConnected(connected) {
+    $("#connect").prop("disabled", connected);
+    $("#disconnect").prop("disabled", !connected);
+    if (connected) {
+        $("#conversation").show();
+    }
+    else {
+        $("#conversation").hide();
+    }
+    $("#greetings").html("");
+}
+
+function connect() {
+    stompClient.activate();
+}
+
+function disconnect() {
+    stompClient.deactivate();
+    setConnected(false);
+    console.log("Disconnected");
+}
+
+function sendContent() {
+    var content = $("#content").val();
+    stompClient.publish({
+    destination: "/hello",
+    body: JSON.stringify(content)
+});
+}
+
+function showGreeting(message) {
+    $("#greetings").append("<tr><td>" + message + "</td></tr>");
+}
+
+$(function () {
+    connect();
+    $("form").on('submit', (e) => e.preventDefault());
+    $( "#connect" ).click(() => connect());
+    $( "#disconnect" ).click(() => disconnect());
+    $( "#send" ).click(() => sendContent());
+});
+
+</script>
+</head>
+<body>
+<noscript>
+  <h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being</h2>
+  enabled. Please enable
+  Javascript and reload this page!</h2></noscript>
+<div id="main-content" class="container-fluid">
+  <div class="row">
+    <div class="col-md-6">
+      <div id="channel-list">
+        <h2>Liste des canaux de discussion</h2>
+        <ul>
+          <li th:each="channel : ${channels}">
+            <form action="/changeChannel" method="post">
+              <input type="hidden" name="channelId" th:value="${channel.id}" />
+              <button type="submit" class="btn btn-link" th:text="${channel.name}"></button>
+            </form>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <header>
+        <h1 th:text="'Canal : ' + ${currentChannelName}"></h1>
+      </header>
+      <main>
+        <div id="chat-box-container">
+          <div id="chat-box">
+            <table id="conversation" class="table table-striped">
+              <thead>
+              <tr>
+                <th>Discussion</th>
+              </tr>
+              </thead>
+              <tbody id="greetings">
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <form class="form-inline">
+              <div class="form-group">
+                <input type="text" id="content" class="form-control" placeholder="Tapez votre message...">
+              </div>
+              <button id="send" class="btn btn-default" type="submit">Send</button>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>
+</body>
+</html>
