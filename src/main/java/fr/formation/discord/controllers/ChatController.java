@@ -68,4 +68,8 @@ public class ChatController {
         model.addAttribute("myMessages", messages);
         return "redirect:/chathome?channelId=" + currentIdChannel;
     }
+
+    public List<Message> getMyMessages() {
+        return myMessages;
+    }
 }
