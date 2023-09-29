@@ -1,14 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta th:content="${token}" name="Authorization"/>
     <title>Chat en ligne</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,15 +12,18 @@
             margin: 0;
             padding: 0;
         }
+
         header {
             background-color: #333;
             color: #fff;
             padding: 10px 0;
             text-align: center;
         }
+
         h1 {
             font-size: 24px;
         }
+
         main {
             display: flex;
             justify-content: space-between;
@@ -35,6 +34,7 @@
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         #message-form {
             display: flex;
         }
@@ -49,6 +49,7 @@
         #send-button {
             padding-top: 10px;
         }
+
         #send-button button {
             padding: 10px;
             background-color: #333;
@@ -57,12 +58,14 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
         #chat-box-container {
             display: flex;
             flex-direction: column;
             height: 100%;
             width: 100%;
         }
+
         #chat-box {
             flex-grow: 1;
             padding: 10px;
@@ -72,26 +75,31 @@
             max-height: 300px;
             width: 100%;
         }
+
         .message-box {
             background-color: #f0f0f0;
             padding: 10px;
             margin: 5px 0;
             border-radius: 5px;
         }
+
         #user-input {
             display: flex;
             flex-direction: column;
             margin-top: 10px;
         }
+
         #user-input form {
             display: flex;
         }
+
         #user-input input[type="text"] {
             flex-grow: 2;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
         #user-input button {
             flex-grow: 1;
             padding: 10px;
@@ -101,17 +109,20 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
         #new_canal {
             padding: 20px;
             background-color: #fff;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         #new_canal input[type="text"] {
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
         #new_canal button {
             padding: 10px;
             background-color: #333;
@@ -120,40 +131,67 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
         #channel-list {
             padding: 20px;
             background-color: #fff;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         #channel-list h2 {
             font-size: 18px;
             margin-bottom: 10px;
         }
+
         #channel-list ul {
             list-style: none;
             padding: 0;
         }
+
         #channel-list li {
             margin-bottom: 5px;
         }
+
         #channel-list a {
             text-decoration: none;
             color: #333;
             font-weight: bold;
         }
+
         #channel-list a:hover {
             text-decoration: underline;
+        }
+
+        #illustration {
+            text-align: center;
+        }
+
+        #illustration img {
+            width: 80%;
+            max-width: 400px;
+            margin: 20px auto;
+            display: block;
         }
     </style>
 </head>
 <body>
-<form th:action="@{/chathome}" method="get">
+<form action="/chathome" method="get">
     <button type="submit">Se connecter</button>
 </form>
-<form th:action="@{/signup}" method="get">
+<form action="/signup" method="get">
     <button type="submit">S'inscrire</button>
 </form>
-
+<h1>Imagines un endroit...</h1>
+<br>
+<br>
+<br>
+<br>
+<br>
+<p>Cet endroit existe bien, et il s'appelle Discord, c'est un endroit où tu peux créer autant de channels que tu veux.
+    Tu as la possibilité dans ces channels de partager des messages où tu peux partager des vidéos</p>
+<div id="illustration">
+    <img src="https://cdn-icons-png.flaticon.com/512/5356/5356190.png" alt="Girl in a jacket" width="500" height="600">
+</div>
 </body>
 </html>

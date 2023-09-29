@@ -15,15 +15,18 @@
             margin: 0;
             padding: 0;
         }
+
         header {
             background-color: #333;
             color: #fff;
             padding: 10px 0;
             text-align: center;
         }
+
         h1 {
             font-size: 24px;
         }
+
         main {
             display: flex;
             justify-content: space-between;
@@ -34,17 +37,49 @@
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         /* Ajoutez d'autres styles ici si nécessaire */
+        #illustration {
+            text-align: center;
+        }
+
+        #illustration img {
+            width: 80%;
+            max-width: 400px;
+            margin: 20px auto;
+            display: block;
+        }
     </style>
 </head>
 <body>
 <h1>Bonjour, connectez vous !</h1>
 
-<form method="POST" th:action="@{/perform_login}">
-    <input type="text" name="username" aria-label="pseudo" />
-    <input type="text" name="password" aria-label="votre mot de passe"/>
-    <input type="submit" value="Se connecter" />
+<form method="POST" th:action="@{/perform_login}" style="margin-top: 5em">
+    <div class="row g-3 align-items-center">
+        <div class="col-auto">
+            <label for="exampleFormControlInput1" class="col-form-label">Identifiant</label>
+        </div>
+        <div class="col-auto" style="margin-left: 1.6em">
+            <input type="text" name="username" class="form-control" id="exampleFormControlInput1">
+        </div>
+    </div>
+    <div class="row g-3 align-items-center">
+        <div class="col-auto">
+            <label for="inputPassword6" class="col-form-label">Mot de passe</label>
+        </div>
+        <div class="col-auto">
+            <input type="password" name="password" id="inputPassword6"
+                   class="form-control" aria-describedby="passwordHelpInline"
+            >
+        </div>
+        <div class="col-auto">
+        </div>
+    </div>
+    <input type="submit" value="Se connecter" style="margin-top: 5em"/>
 </form>
-
+<div id="illustration">
+    <img src="https://cdn-icons-png.flaticon.com/512/5509/5509636.png"
+         alt="connect" width="500" height="600">
+</div>
 </body>
 </html>
