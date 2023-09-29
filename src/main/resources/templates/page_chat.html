@@ -10,6 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script>
 $(document).ready(function () {
     const stompClient = new StompJs.Client({
@@ -48,12 +49,6 @@ $(document).ready(function () {
         stompClient.activate();
     }
 
-    function disconnect() {
-        stompClient.deactivate();
-        setConnected(false);
-        console.log("Disconnected");
-    }
-
    $("#message-form").on('submit', function (e) {
     e.preventDefault();
     var content = $("#content").val();
@@ -69,14 +64,10 @@ $(document).ready(function () {
     });
     $("#content").val("");
 });
-
-
     connect();
     $( "#connect" ).click(() => connect());
-    $( "#disconnect" ).click(() => disconnect());
 });
 </script>
-
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -214,41 +205,7 @@ $(document).ready(function () {
             text-decoration: underline;
         }
     </style>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 </head>
-<script>
-
-    var socket = new WebSocket("ws://localhost:35729/chat"); // Remplacez "votre-serveur" par l'URL de votre serveur WebSocket
-    // Créer une fonction pour gérer les messages reçus
-    function handleMessage(message) {
-        $("#list-messages")
-            .last()
-            .append("<span>" + message.username + " : " + message.content + "</span>");
-    }
-
-
-         // Écoutez les événements de réception de messages
-        socket.addEventListener("/topic/chat", (event) => {
-          const receivedMessage = JSON.parse(event.data);
-            // Traitez le message reçu du topic "/topic/chat"
-            console.log('Message reçu du topic "/topic/chat" :', receivedMessage);
-    });
-
-    socket.onclose = function (event) {
-        // La connexion WebSocket est fermée
-        if (event.wasClean) {
-            // La connexion a été fermée proprement
-        } else {
-            // La connexion a été interrompue de manière inattendue, vous pouvez tenter de la rétablir ici si nécessaire
-        }
-    };
-
-    socket.onerror = function (error) {
-        // Une erreur s'est produite lors de la connexion WebSocket
-        console.error("WebSocket Error: " + error.message);
-    };
-</script>
-
 <body>
 <div class="container-fluid">
     <div class="row">
@@ -307,7 +264,7 @@ $(document).ready(function () {
                 </button>
             </div>
             <div class="modal-body">
-                <form action="/createChannel" method="post">
+                <form th:action="@{/createChannel}" method="post">
                     <div class="form-group">
                         <label for="channelName">Nom du canal :</label>
                         <input type="text" id="channelName" name="channelName" class="form-control" placeholder="Entrez le nom du nouveau canal..." required>

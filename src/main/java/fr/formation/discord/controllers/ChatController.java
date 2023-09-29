@@ -46,12 +46,8 @@ public class ChatController {
             model.addAttribute("myMessages", myMessages);
         }
         model.addAttribute("channels", cRepo.findAll());
-
-
-        String jwtToken = (String) model.getAttribute("jwtToken"); // Assurez-vous d'appeler JwtUtil.generate() correctement
-
+        String jwtToken = (String) model.getAttribute("jwtToken");
         model.addAttribute("jwtToken", jwtToken);
-
 
         return "page_chat";
     }

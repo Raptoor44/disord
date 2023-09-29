@@ -1,4 +1,4 @@
-package fr.formation.discord;
+package fr.formation.discord.models;
 
 public class Content {
 

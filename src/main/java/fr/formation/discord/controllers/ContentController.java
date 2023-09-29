@@ -1,18 +1,15 @@
 package fr.formation.discord.controllers;
 
-import fr.formation.discord.Content;
+import fr.formation.discord.models.Content;
 import fr.formation.discord.models.Message;
-import fr.formation.discord.models.UserLoaded;
 import fr.formation.discord.repo.ChannelRepository;
 import fr.formation.discord.repo.MessageRepository;
+import fr.formation.discord.services.UserLoaded;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.util.HtmlUtils;
 
 @Controller
