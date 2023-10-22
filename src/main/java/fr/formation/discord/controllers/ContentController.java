@@ -26,6 +26,7 @@ public class ContentController {
     public Content greeting(Message message, @Header("channelId") Long channelId) throws Exception {
         String space = ": ";
         message.setUser(UserLoaded.user);
+
         message.setChannel(cRepo.findById(channelId.intValue()).orElse(null));
         mRepo.save(message);
         return new Content(HtmlUtils.htmlEscape( message.getUser().getUsername() + space + message.getContent()));
