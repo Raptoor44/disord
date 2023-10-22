@@ -34,7 +34,7 @@ public class VideoController {
     public ResponseEntity<List<String>> getAllVideoNames(@RequestParam("idChannel") String channelIdParam){
 
         long channelIdParsing = 0;
-        if(channelIdParam != null){
+        if(!channelIdParam.isEmpty()){
             channelIdParsing = Long.parseLong(channelIdParam);
         }
 

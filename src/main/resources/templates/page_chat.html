@@ -12,6 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script type="text/javascript" th:src="@{/js/src/page_chat_script.js}"></script>
+
 </head>
 <body>
 <div class="container-fluid">
@@ -22,6 +23,7 @@
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createChannelModal">
                     Créer un Canal
                 </button>
+
             </div>
             <div id="channel-list">
                 <h2>Liste des Canaux de Discussion</h2>
@@ -35,7 +37,7 @@
         </div>
         <div class="col-md-9">
             <header class="mb-4">
-                <h1 th:text="'Canal : ' + ${currentChannelName}"></h1>
+                <h1 th:if="${currentChannelName != null}" th:text="'Canal : ' + ${currentChannelName}"></h1>
             </header>
             <main>
                 <div id="chat-box-container">
@@ -50,6 +52,7 @@
                         <div id="message-form" class="mb-3">
                             <form action="/sendMessage" method="post">
                                 <input type="hidden" id="idChannel" name="channelId" th:value="${currentChannelId}" />
+                                <input type="hidden" id="username" th:value="${username}" class="hidden-username"/>
                                 <input type="text" id="content" name="content" class="form-control" placeholder="Tapez votre message...">
                                 <button type="submit" class="btn btn-primary">Envoyer</button>
                             </form>
