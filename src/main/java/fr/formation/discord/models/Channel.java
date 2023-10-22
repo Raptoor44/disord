@@ -18,7 +18,6 @@ public class Channel {
     @OneToMany(mappedBy = "channel")
     private List<Message> messages;
 
-    // Ajoutez un constructeur vide
     public Channel() {
     }
 }

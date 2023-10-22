@@ -20,7 +20,6 @@ public class ConnectController {
     @Autowired
     private UserRepository uRepo;
 
-
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -36,15 +35,13 @@ public class ConnectController {
     public String postConnect(UserSignUpAndConnect request, Model model) {
         // On va demander à SPRING SECURITY d'authentifier l'utilisateur
         try {
-           Authentication authentication = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
+            Authentication authentication = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
 
-           authentication = this.authenticationManager.authenticate(authentication);
+            authentication = this.authenticationManager.authenticate(authentication);
 
-           SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-
-
-           return "redirect:/chathome";
+            return "redirect:/chathome";
         }
 
         catch (BadCredentialsException e) {
