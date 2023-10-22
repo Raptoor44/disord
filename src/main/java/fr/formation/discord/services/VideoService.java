@@ -2,11 +2,15 @@ package fr.formation.discord.services;
 
 import fr.formation.discord.Exceptions.VideoAlreadyExistsException;
 import fr.formation.discord.Exceptions.VideoNotFoundException;
+import fr.formation.discord.models.User;
 import fr.formation.discord.models.Video;
 import fr.formation.discord.repo.ChannelRepository;
+import fr.formation.discord.repo.UserRepository;
 import fr.formation.discord.repo.VideoRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +26,9 @@ public class VideoService implements IVideoService{
 
     @Autowired
     private ChannelRepository channelRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public Video getVideo(String name) {
@@ -44,8 +51,12 @@ public class VideoService implements IVideoService{
         if(videoRepository.existsByName(name)){
             throw new VideoAlreadyExistsException();
         }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username =  authentication.getName();
 
-        Video newVid = new Video(name, file.getBytes() ,UserLoaded.user, channelRepository.getReferenceById(Math.toIntExact(idChannel)));
+        User user = userRepository.findByUsername(username).orElseThrow();
+
+        Video newVid = new Video(name, file.getBytes() ,user, channelRepository.getReferenceById(Math.toIntExact(idChannel)));
         videoRepository.save(newVid);
     }
 

@@ -2,19 +2,28 @@ package fr.formation.discord.controllers;
 
 
 import fr.formation.discord.models.Channel;
+import fr.formation.discord.models.Content;
 import fr.formation.discord.models.Message;
+import fr.formation.discord.models.User;
 import fr.formation.discord.repo.ChannelRepository;
 import fr.formation.discord.repo.MessageRepository;
 import fr.formation.discord.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.util.HtmlUtils;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +50,7 @@ public class ChatController {
                 model.addAttribute("myMessages", channel.getMessages());
                 model.addAttribute("currentChannelId", channelId);
                 model.addAttribute("currentChannelName", channel.getName());
+
             }
         } else {
             model.addAttribute("myMessages", myMessages);
@@ -48,6 +58,11 @@ public class ChatController {
         model.addAttribute("channels", cRepo.findAll());
         String jwtToken = (String) model.getAttribute("jwtToken");
         model.addAttribute("jwtToken", jwtToken);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUser =  authentication.getName();
+
+        model.addAttribute("username",currentUser);
 
         return "page_chat";
     }

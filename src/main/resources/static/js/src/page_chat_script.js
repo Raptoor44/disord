@@ -3,6 +3,8 @@ $(document).ready(function () {
         brokerURL: 'ws://localhost:8080/gs-guide-websocket'
     });
 
+    const jwtToken = "${jwtToken}";
+
 
     const form = document.querySelector('#video-form');
     const videoDiv = document.querySelector('#video-player');
@@ -136,8 +138,10 @@ $(document).ready(function () {
         e.preventDefault();
         var content = $("#content").val();
         var channelId = $("#idChannel").val();
+        var username = $("#username").val();
         var headers = {
-            "channelId": channelId
+            "channelId": channelId,
+            "username": username
         };
 
         stompClient.publish({
